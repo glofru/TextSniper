@@ -2,7 +2,7 @@
 //  Notifier.swift
 //  TextSniper
 //
-//  Created by Lofrumento, Gianluca on 2024-05-08.
+//  Created by Lofrumento, Gianluca on 2024-09-28.
 //
 
 import BezelNotification
