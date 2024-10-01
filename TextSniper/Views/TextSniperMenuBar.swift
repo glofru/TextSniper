@@ -10,8 +10,8 @@ import SwiftUI
 import HotKey
 
 struct TextSniperMenuBar: Scene {
-    
-    @StateObject var textSnipeManager = TextSnipeManager()
+
+    @EnvironmentObject private var textSnipeManager: TextSnipeManager
     
     private var newScreentshotHotKey = HotKey(key: .init(string: "2")!, modifiers: [.command, .shift])
     
@@ -34,8 +34,11 @@ struct TextSniperMenuBar: Scene {
     
     private func snipeScreenshot() {
         Task {
-            if let _ = await textSnipeManager.snipeScreenshot() {
+            await textSnipeManager.snipeScreenshot()
+            if textSnipeManager.textSnipe != nil {
                 Notifier.show(text: "Copied to clipboard", status: .success)
+
+                NSApp.activate()
             } else {
                 Notifier.show(text: "Failed to copy to clipboard", status: .fail)
             }

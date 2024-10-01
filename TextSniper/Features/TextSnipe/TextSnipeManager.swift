@@ -7,19 +7,23 @@
 
 import Foundation
 
-actor TextSnipeManager: ObservableObject {
-    func snipeScreenshot() async -> TextSnipe? {
-        if let screenshot = ScreenshotTool.takeScreenshot() {
-            let text = await TextRecognizer.readText(from: screenshot)
-            
-            let copyResult = await ClipboardManager.copyText(text.joined(separator: "\n"))
-            
-            return switch copyResult {
-            case .success(()): TextSnipe(chunks: text)
-            default: nil
-            }
+@MainActor class TextSnipeManager: ObservableObject {
+    
+    @Published var textSnipe: TextSnipe?
+    
+    func snipeScreenshot() async {
+        guard let screenshot = ScreenshotTool.takeScreenshot() else {
+            textSnipe = nil
+            return
         }
         
-        return nil
+        let text = await TextRecognizer.readText(from: screenshot)
+        
+        let copyResult = ClipboardManager.copyText(text.joined(separator: "\n"))
+        
+        textSnipe = switch copyResult {
+        case .success(()): TextSnipe(image: screenshot, chunks: text)
+        default: nil
+        }
     }
 }
