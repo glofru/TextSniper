@@ -13,6 +13,8 @@ struct TextSniperFloatingPanel: View {
     
     @State private var streamedText: String?
 
+    @State private var error: Error?
+
     var body: some View {
         ZStack {
             VStack {
@@ -31,32 +33,16 @@ struct TextSniperFloatingPanel: View {
                 HStack {
                     ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Summarize text") {
                         Task {
-                            guard let client = AWSClient() else {
-                                print("Failed client")
-                                return
-                            }
-
-                            await client.initModels()
-                            print(client.modelIds)
                             do {
-                                let stream = try await client.summarize(text: "Summarize the following text.\n\n\(textSnipeManager.textSnipe!.chunks.joined(separator: "\n"))")
-                                
+                                let client = try await TextSniperClient()
+                                let stream = await client.summarize(text: textSnipeManager.textSnipe!.chunks.joined(separator: "\n"))
+
                                 streamedText = ""
                                 for try await event in stream {
-                                    switch event {
-                                    case .chunk(let part):
-                                        let jsonObject = try JSONSerialization.jsonObject(with: part.bytes!, options: [])
-                                        if let chunkText = extractTextFromChunk(jsonObject) {
-                                            DispatchQueue.main.async {
-                                                streamedText! += chunkText
-                                            }
-                                        }
-                                    case .sdkUnknown(let unknown):
-                                        print("Unknown: \"\(unknown)\"")
-                                    }
+                                    streamedText! += event.text
                                 }
                             } catch {
-                                print("Error summary \(error)")
+                                self.error = error
                             }
                         }
                     }
@@ -88,13 +74,13 @@ struct TextSniperFloatingPanel: View {
                 .textSelection(.enabled)
                 .padding()
         }
-    }
-    
-    private func extractTextFromChunk(_ jsonObject: Any) -> String? {
-        if let dict = jsonObject as? [String: Any], let delta = dict["delta"] as? [String: String], delta["type"] == "text_delta" {
-            return delta["text"]
+        .alert(isPresented: .init(get: {
+            error != nil
+        }, set: { _ in
+            error = nil
+        })) {
+            Alert(title: Text("Error"), message: Text(error!.localizedDescription))
         }
-        return nil
     }
 }
 

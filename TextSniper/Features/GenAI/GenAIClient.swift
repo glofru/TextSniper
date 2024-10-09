@@ -7,18 +7,37 @@
 
 import Foundation
 
-actor GenAIClient {
-    
-    let client: AWSClient
-
-    init?() async throws {
-        guard let client = AWSClient() else {
-            return nil
+enum GenAIClientError: Error {
+    case expiredToken
+    case clientFailure
+    case genericError(String)
+}
+extension GenAIClientError: LocalizedError {
+    var errorDescription: String? {
+        switch self {
+        case .clientFailure:
+            "Client failure"
+        case .expiredToken:
+            "Expired token"
+        case .genericError(let error):
+            "Generic error: \(error)"
         }
-        
-        self.client = client
-        
-        await self.client.initModels()
     }
+}
 
+enum GenAIModel {
+    case fast
+    case smart
+}
+
+struct GenAIResponse {
+    let text: String
+}
+
+protocol GenAIClient: Sendable {
+    init?()
+
+    func initModels() async throws(GenAIClientError)
+    
+    func input(text: String, model: GenAIModel) -> AsyncThrowingStream<GenAIResponse, Error>
 }
