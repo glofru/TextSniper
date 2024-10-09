@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E43453E22CAB7A6500D8E4D4 /* AWSBedrock in Frameworks */ = {isa = PBXBuildFile; productRef = E43453E12CAB7A6500D8E4D4 /* AWSBedrock */; };
+		E43453E92CAB7D6500D8E4D4 /* AWSBedrockRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = E43453E82CAB7D6500D8E4D4 /* AWSBedrockRuntime */; };
 		E465A54D2CA8C1F500155C6F /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = E465A54C2CA8C1F500155C6F /* HotKey */; };
 		E465A5502CA8C1FF00155C6F /* BezelNotification in Frameworks */ = {isa = PBXBuildFile; productRef = E465A54F2CA8C1FF00155C6F /* BezelNotification */; };
 /* End PBXBuildFile section */
@@ -59,6 +61,8 @@
 			files = (
 				E465A5502CA8C1FF00155C6F /* BezelNotification in Frameworks */,
 				E465A54D2CA8C1F500155C6F /* HotKey in Frameworks */,
+				E43453E92CAB7D6500D8E4D4 /* AWSBedrockRuntime in Frameworks */,
+				E43453E22CAB7A6500D8E4D4 /* AWSBedrock in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +126,8 @@
 			packageProductDependencies = (
 				E465A54C2CA8C1F500155C6F /* HotKey */,
 				E465A54F2CA8C1FF00155C6F /* BezelNotification */,
+				E43453E12CAB7A6500D8E4D4 /* AWSBedrock */,
+				E43453E82CAB7D6500D8E4D4 /* AWSBedrockRuntime */,
 			);
 			productName = TextSniper;
 			productReference = E465A51B2CA8C19600155C6F /* TextSniper.app */;
@@ -208,6 +214,7 @@
 			packageReferences = (
 				E465A54B2CA8C1F500155C6F /* XCRemoteSwiftPackageReference "HotKey" */,
 				E465A54E2CA8C1FF00155C6F /* XCRemoteSwiftPackageReference "BezelNotification" */,
+				E43453E02CAB7A6500D8E4D4 /* XCRemoteSwiftPackageReference "aws-sdk-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E465A51C2CA8C19600155C6F /* Products */;
@@ -593,6 +600,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E43453E02CAB7A6500D8E4D4 /* XCRemoteSwiftPackageReference "aws-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/awslabs/aws-sdk-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.9;
+			};
+		};
 		E465A54B2CA8C1F500155C6F /* XCRemoteSwiftPackageReference "HotKey" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/soffes/HotKey";
@@ -612,6 +627,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E43453E12CAB7A6500D8E4D4 /* AWSBedrock */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E43453E02CAB7A6500D8E4D4 /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
+			productName = AWSBedrock;
+		};
+		E43453E82CAB7D6500D8E4D4 /* AWSBedrockRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E43453E02CAB7A6500D8E4D4 /* XCRemoteSwiftPackageReference "aws-sdk-swift" */;
+			productName = AWSBedrockRuntime;
+		};
 		E465A54C2CA8C1F500155C6F /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E465A54B2CA8C1F500155C6F /* XCRemoteSwiftPackageReference "HotKey" */;

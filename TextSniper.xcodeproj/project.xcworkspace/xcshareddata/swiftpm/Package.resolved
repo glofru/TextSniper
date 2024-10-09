@@ -1,6 +1,24 @@
 {
-  "originHash" : "768d467c536657c66ecc1be8d05f7841bb107cc5ad25b1545820f9db93043ed2",
+  "originHash" : "d53b4062e9781eae6bf5688ec83c44d514585bb9aefaf667fac4424fc0756299",
   "pins" : [
+    {
+      "identity" : "aws-crt-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/awslabs/aws-crt-swift",
+      "state" : {
+        "revision" : "7b42e0343f28b3451aab20840dc670abd12790bd",
+        "version" : "0.36.0"
+      }
+    },
+    {
+      "identity" : "aws-sdk-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/awslabs/aws-sdk-swift",
+      "state" : {
+        "revision" : "691278c5c01fe104fd4d533929d921d56e7b5815",
+        "version" : "1.0.9"
+      }
+    },
     {
       "identity" : "bezelnotification",
       "kind" : "remoteSourceControl",
@@ -20,6 +38,15 @@
       }
     },
     {
+      "identity" : "smithy-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/smithy-lang/smithy-swift",
+      "state" : {
+        "revision" : "c5242d4e06e721293ee91c7affd1d527912f596d",
+        "version" : "0.76.0"
+      }
+    },
+    {
       "identity" : "swift-cross-kit-types",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/RougeWare/Swift-Cross-Kit-Types.git",
@@ -35,6 +62,15 @@
       "state" : {
         "revision" : "a854f4ed89b7e404019b5a09d24e067acc15432d",
         "version" : "1.2.4"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
+        "version" : "1.6.1"
       }
     }
   ],

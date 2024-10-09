@@ -10,6 +10,8 @@ import SwiftUI
 struct TextSniperFloatingPanel: View {
     
     @ObservedObject var textSnipeManager: TextSnipeManager
+    
+    @State private var streamedText: String?
 
     var body: some View {
         ZStack {
@@ -28,6 +30,38 @@ struct TextSniperFloatingPanel: View {
                 
                 HStack {
                     ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Summarize text") {
+                        Task {
+                            guard let client = AWSClient() else {
+                                print("Failed client")
+                                return
+                            }
+
+                            await client.initModels()
+                            print(client.modelIds)
+                            do {
+                                let stream = try await client.summarize(text: "Summarize the following text.\n\n\(textSnipeManager.textSnipe!.chunks.joined(separator: "\n"))")
+                                
+                                streamedText = ""
+                                for try await event in stream {
+                                    switch event {
+                                    case .chunk(let part):
+                                        let jsonObject = try JSONSerialization.jsonObject(with: part.bytes!, options: [])
+                                        if let chunkText = extractTextFromChunk(jsonObject) {
+                                            DispatchQueue.main.async {
+                                                streamedText! += chunkText
+                                            }
+                                        }
+                                    case .sdkUnknown(let unknown):
+                                        print("Unknown: \"\(unknown)\"")
+                                    }
+                                }
+                            } catch {
+                                print("Error summary \(error)")
+                            }
+                        }
+                    }
+                    
+                    ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Ask with custom input") {
                         
                     }
                     
@@ -39,19 +73,31 @@ struct TextSniperFloatingPanel: View {
                         
                     }
                 }
+                .disabled(textSnipeManager.textSnipe == nil)
             }
             .frame(width: 800)
             .padding()
             .edgesIgnoringSafeArea(.all)
-            .onAppear {
-//                textSnipeManager.textSnipe = TextSnipe(image: NSImage(named: "test")!.cgImage(forProposedRect: nil, context: nil, hints: nil)!, chunks: [])
-            }
         }
+        .sheet(isPresented: .init(get: {
+            streamedText != nil
+        }, set: { _ in
+            streamedText = nil
+        })) {
+            Text(streamedText!)
+                .textSelection(.enabled)
+                .padding()
+        }
+    }
+    
+    private func extractTextFromChunk(_ jsonObject: Any) -> String? {
+        if let dict = jsonObject as? [String: Any], let delta = dict["delta"] as? [String: String], delta["type"] == "text_delta" {
+            return delta["text"]
+        }
+        return nil
     }
 }
 
 #Preview {
-    let manager = TextSnipeManager()
-    
     return TextSniperFloatingPanel(textSnipeManager: TextSnipeManager())
 }
