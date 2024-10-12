@@ -8,35 +8,26 @@
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    var floatingPanel: FloatingPanel!
+    var panel: FloatingPanel<TextSniperFloatingPanel>!
     
     @MainActor let textSnipeManager = TextSnipeManager()
-
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        createFloatingPanel()
-
-        // Center doesn't place it in the absolute center, see the documentation for more details
-        floatingPanel.center()
-
-        // Shows the panel and makes it active
-        floatingPanel.orderFront(nil)
-        floatingPanel.makeKey()
+    
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        AppState.shared.appDelegate = self
+    }
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        print("Finish launching")
+        panel = FloatingPanel(
+            contentRect: NSRect(origin: .zero, size: .init(width: 100, height: 200)),
+          identifier: Bundle.main.bundleIdentifier ?? "org.p0deje.Maccy"
+        ) {
+            TextSniperFloatingPanel(textSnipeManager: textSnipeManager)
+        }
     }
 
-    func applicationDidBecomeActive(_ notification: Notification) {
-        print("Active")
-    }
-
-    @MainActor private func createFloatingPanel() {
-        // Create the SwiftUI view that provides the window contents.
-        // I've opted to ignore top safe area as well, since we're hiding the traffic icons
-        let contentView = TextSniperFloatingPanel(textSnipeManager: textSnipeManager)
-          .edgesIgnoringSafeArea(.top)
-
-        // Create the window and set the content view.
-        floatingPanel = FloatingPanel(contentRect: NSRect(x: 0, y: 0, width: 800, height: 80), backing: .buffered, defer: false)
-
-        floatingPanel.contentView = NSHostingView(rootView: contentView)
+    func applicationDidResignActive(_ notification: Notification) {
+        panel.close()
     }
 }
 

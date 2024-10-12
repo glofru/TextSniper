@@ -23,6 +23,7 @@ struct TextSniperMenuBar: Scene {
             
             Button("Snipe screenshot", action: snipeScreenshot)
                 .keyboardShortcut(KeyEquivalent("2"), modifiers: [.command, .shift])
+
             Button("Quit", action: quitApp)
         } label: {
             Image(systemName: "bolt.fill")
@@ -38,7 +39,7 @@ struct TextSniperMenuBar: Scene {
             if textSnipeManager.textSnipe != nil {
                 Notifier.show(text: "Copied to clipboard", status: .success)
 
-                NSApp.activate()
+                AppState.shared.appDelegate!.panel.open()
             } else {
                 Notifier.show(text: "Failed to copy to clipboard", status: .fail)
             }
