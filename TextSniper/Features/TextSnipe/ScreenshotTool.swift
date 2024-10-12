@@ -13,21 +13,21 @@ class ScreenshotTool {
     }
 }
 
-fileprivate class ScreenCapture {
-    static private let destinationPath = "screen.png"
+private class ScreenCapture {
+    private static let destinationPath = "/Users/glofru/Downloads/screen.png"
 
     static func captureScreen() -> CGImage? {
         let task = Process()
         task.launchPath = "/usr/sbin/screencapture"
         task.arguments = ["-i", "-r", destinationPath]
         task.launch()
-        
+
         task.waitUntilExit()
-        
+
         let image = NSImage(contentsOfFile: destinationPath)?.cgImage(forProposedRect: nil, context: nil, hints: nil)
-        
+
         try? FileManager.default.removeItem(atPath: destinationPath)
-        
+
         return image
     }
 }

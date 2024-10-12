@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct ButtonWithIcon: View {
-    
     let icon: String
     let label: String
     let action: @MainActor () -> Void
-    
+
     var body: some View {
         Button(action: action, label: {
             ZStack {

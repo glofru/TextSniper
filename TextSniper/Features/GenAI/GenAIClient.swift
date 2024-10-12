@@ -12,6 +12,7 @@ enum GenAIClientError: Error {
     case clientFailure
     case genericError(String)
 }
+
 extension GenAIClientError: LocalizedError {
     var errorDescription: String? {
         switch self {
@@ -19,7 +20,7 @@ extension GenAIClientError: LocalizedError {
             "Client failure"
         case .expiredToken:
             "Expired token"
-        case .genericError(let error):
+        case let .genericError(error):
             "Generic error: \(error)"
         }
     }
@@ -38,6 +39,6 @@ protocol GenAIClient: Sendable {
     init?()
 
     func initModels() async throws(GenAIClientError)
-    
+
     func input(text: String, model: GenAIModel) -> AsyncThrowingStream<GenAIResponse, Error>
 }

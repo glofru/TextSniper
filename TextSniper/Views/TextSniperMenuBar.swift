@@ -10,17 +10,16 @@ import SwiftUI
 import HotKey
 
 struct TextSniperMenuBar: Scene {
-
     @EnvironmentObject private var textSnipeManager: TextSnipeManager
-    
+
     private var newScreentshotHotKey = HotKey(key: .init(string: "2")!, modifiers: [.command, .shift])
-    
+
     var body: some Scene {
         MenuBarExtra {
             Text("Text Sniper")
-            
+
             Divider()
-            
+
             Button("Snipe screenshot", action: snipeScreenshot)
                 .keyboardShortcut(KeyEquivalent("2"), modifiers: [.command, .shift])
 
@@ -32,7 +31,7 @@ struct TextSniperMenuBar: Scene {
                 }
         }
     }
-    
+
     private func snipeScreenshot() {
         Task {
             await textSnipeManager.snipeScreenshot()
@@ -45,7 +44,7 @@ struct TextSniperMenuBar: Scene {
             }
         }
     }
-    
+
     private func quitApp() {
         NSApp.terminate(nil)
     }

@@ -10,6 +10,6 @@ import Foundation
 @Observable
 final class AppState: @unchecked Sendable {
     static let shared = AppState()
-    
+
     var appDelegate: AppDelegate?
 }

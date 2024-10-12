@@ -5,12 +5,12 @@
 //  Created by Lofrumento, Gianluca on 2024-09-28.
 //
 
-import BezelNotification
 import AppKit
+import BezelNotification
 
 enum NotificationStatus: String {
-    case success = "success"
-    case fail = "fail"
+    case success
+    case fail
 }
 
 class Notifier {

@@ -12,12 +12,12 @@ enum ClipboardError: Error {
 }
 
 class ClipboardManager {
-    @MainActor static private let pasteboard = NSPasteboard.general
+    @MainActor private static let pasteboard = NSPasteboard.general
 
     @MainActor static func copyText(_ text: String) -> Result<Void, ClipboardError> {
         pasteboard.clearContents()
         let success = pasteboard.setString(text, forType: .string)
-        
+
         switch success {
         case true: return .success(())
         default: return .failure(.failedToCopy)

@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct TextSniperFloatingPanel: View {
-    
     @ObservedObject var textSnipeManager: TextSnipeManager
-    
+
     @State private var streamedText: String?
 
     @State private var error: Error?
@@ -29,7 +28,7 @@ struct TextSniperFloatingPanel: View {
                         .frame(height: 300)
                         .frame(maxHeight: 300)
                 }
-                
+
                 HStack {
                     ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Summarize text") {
                         Task {
@@ -46,18 +45,12 @@ struct TextSniperFloatingPanel: View {
                             }
                         }
                     }
-                    
-                    ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Ask with custom input") {
-                        
-                    }
-                    
-                    ButtonWithIcon(icon: "qrcode.viewfinder", label: "Read QR Code") {
-                        
-                    }
-                    
-                    ButtonWithIcon(icon: "square.and.arrow.down", label: "Save") {
-                        
-                    }
+
+                    ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Ask with custom input") {}
+
+                    ButtonWithIcon(icon: "qrcode.viewfinder", label: "Read QR Code") {}
+
+                    ButtonWithIcon(icon: "square.and.arrow.down", label: "Save") {}
                 }
                 .disabled(textSnipeManager.textSnipe == nil)
             }
@@ -85,5 +78,5 @@ struct TextSniperFloatingPanel: View {
 }
 
 #Preview {
-    return TextSniperFloatingPanel(textSnipeManager: TextSnipeManager())
+    TextSniperFloatingPanel(textSnipeManager: TextSnipeManager())
 }
