@@ -8,7 +8,7 @@
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
-    var panel: FloatingPanel<TextSniperFloatingPanel>!
+    var panel: FloatingPanel<FloatingPanelContentView>!
 
     @MainActor let textSnipeManager = TextSnipeManager()
 
@@ -17,12 +17,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationDidFinishLaunching(_: Notification) {
-        print("Finish launching")
         panel = FloatingPanel(
             contentRect: NSRect(origin: .zero, size: .init(width: 100, height: 200)),
             identifier: Bundle.main.bundleIdentifier ?? "org.p0deje.Maccy"
         ) {
-            TextSniperFloatingPanel(textSnipeManager: textSnipeManager)
+            FloatingPanelContentView(textSnipeManager: textSnipeManager)
         }
     }
 

@@ -39,6 +39,7 @@ class FloatingPanel<Content: View>: NSPanel, NSWindowDelegate {
         titlebarAppearsTransparent = true
         isMovableByWindowBackground = true
         hidesOnDeactivate = false
+        styleMask.remove(.resizable)
 
         // Hide all traffic light buttons
         standardWindowButton(.closeButton)?.isHidden = true
@@ -61,11 +62,12 @@ class FloatingPanel<Content: View>: NSPanel, NSWindowDelegate {
     }
 
     func open() {
-        NSApp.activate()
         setFrameOrigin(.init(x: 500, y: 500))
         orderFrontRegardless()
         makeKey()
         isPresented = true
+
+        NSApp.activate()
     }
 
     override func close() {
