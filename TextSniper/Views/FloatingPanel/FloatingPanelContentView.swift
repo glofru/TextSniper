@@ -10,10 +10,6 @@ import SwiftUI
 struct FloatingPanelContentView: View {
     @ObservedObject var textSnipeManager: TextSnipeManager
 
-    @State private var streamedText: String?
-
-    @State private var error: Error?
-
     var body: some View {
         VStack {
             if let textSnipe = textSnipeManager.textSnipe {
@@ -30,20 +26,10 @@ struct FloatingPanelContentView: View {
 
             HStack {
                 ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Summarize text") {
-                    Task {
-                        do {
-                            let client = try await TextSniperClient()
-                            let stream = await client.summarize(text: textSnipeManager.textSnipe!.chunks.joined(separator: "\n"))
-
-                            streamedText = ""
-                            for try await event in stream {
-                                streamedText! += event.text
-                            }
-                        } catch {
-                            self.error = error
-                        }
-                    }
+                    textSnipeManager.summarizeTextSnipe()
                 }
+
+                ButtonWithIcon(icon: "text.page.badge.magnifyingglass", label: "Analyze image") {}
 
                 ButtonWithIcon(icon: "list.bullet.rectangle.portrait", label: "Ask with custom input") {}
 
@@ -57,21 +43,58 @@ struct FloatingPanelContentView: View {
         .visualEffect()
         .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: .init(get: {
-            streamedText != nil
-        }, set: { _ in
-            streamedText = nil
+            textSnipeManager.streamedText != nil
+        }, set: { isPresented in
+            if !isPresented {
+                textSnipeManager.streamedText = nil
+            }
         })) {
-            Text(streamedText!)
+            FloatingPanelSheetView(textSnipeManager: textSnipeManager)
+        }
+        .alert(item: $textSnipeManager.error) { error in
+            Alert(title: Text("Error"), message: Text(error))
+        }
+    }
+}
+
+private struct FloatingPanelSheetView: View {
+    @Environment(\.presentationMode) var presentationMode
+
+    @ObservedObject var textSnipeManager: TextSnipeManager
+
+    private var text: String? {
+        textSnipeManager.streamedText
+    }
+
+    var body: some View {
+        VStack {
+            Text(text ?? "...")
                 .textSelection(.enabled)
-                .padding()
+
+            HStack {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Text("Close")
+                }.keyboardShortcut(.cancelAction)
+
+                Button(action: {
+                    dismiss(text: text)
+                }) {
+                    Text("Copy and close")
+                }.keyboardShortcut(.defaultAction)
+                    .disabled(textSnipeManager.streaming)
+            }
         }
-        .alert(isPresented: .init(get: {
-            error != nil
-        }, set: { _ in
-            error = nil
-        })) {
-            Alert(title: Text("Error"), message: Text(error!.localizedDescription))
+        .padding()
+    }
+
+    private func dismiss(text: String? = nil) {
+        if let text {
+            ClipboardManager.copyText(text)
         }
+
+        presentationMode.wrappedValue.dismiss()
     }
 }
 
